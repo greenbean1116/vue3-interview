@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vue3 + TS + Element Plus 面試題目</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
+    background: #f0f2f5;
+    color: #2c3e50;
+    padding: 32px 16px;
+    line-height: 1.7;
+  }
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 140px; height: 140px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+  }
+  .header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .header .sub {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.6);
+    position: relative;
+  }
+  .header .tags {
+    margin-top: 16px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    position: relative;
+  }
+  .tag {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+  }
+
+  /* Timeline allocation */
+  .time-bar {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .time-bar h3 { font-size: 0.85rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .time-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .time-label { width: 200px; font-size: 0.88rem; color: #2c3e50; flex-shrink: 0; }
+  .time-track { flex: 1; background: #eef1f3; border-radius: 6px; height: 22px; overflow: hidden; }
+  .time-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; font-size: 0.78rem; font-weight: 600; color: #fff; }
+  .time-min { width: 44px; font-size: 0.82rem; color: #7f8c8d; text-align: right; flex-shrink: 0; }
+
+  /* Section */
+  .section {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 28px;
+    border-bottom: 1px solid #eef1f3;
+  }
+  .section-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .section-header h2 { font-size: 1.05rem; font-weight: 700; }
+  .section-header .section-desc { font-size: 0.82rem; color: #95a5a6; margin-top: 2px; }
+
+  .icon-js { background: #fef3c7; }
+  .icon-vue { background: #dbeafe; }
+  .icon-ep { background: #ede9fe; }
+  .icon-scenario { background: #dcfce7; }
+  .icon-live { background: #fce7f3; }
+  .icon-algo { background: #ffedd5; }
+
+  /* Questions */
+  .q-list { padding: 10px 28px 20px; }
+  .q-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f5f7;
+  }
+  .q-item:last-child { border-bottom: none; }
+  .q-num {
+    background: #f0f2f5;
+    color: #5a6a7a;
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .q-content { flex: 1; }
+  .q-content strong { font-weight: 600; color: #2c3e50; }
+  .q-content .hint {
+    font-size: 0.82rem;
+    color: #95a5a6;
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  /* Scenario cards */
+  .scenario-card {
+    margin: 10px 28px;
+    border: 1px solid #eef1f3;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .scenario-card .sc-head {
+    background: #f8fafb;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #eef1f3;
+  }
+  .sc-badge {
+    background: #10b981;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .sc-badge.b { background: #3b82f6; }
+  .sc-badge.c { background: #8b5cf6; }
+  .sc-badge.d { background: #f59e0b; }
+  .scenario-card .sc-body { padding: 14px 18px; font-size: 0.9rem; color: #374151; }
+  .scenario-card .sc-body blockquote {
+    border-left: 3px solid #10b981;
+    background: #f0fdf4;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 8px;
+    font-style: italic;
+    color: #166534;
+  }
+
+  /* Live coding cards */
+  .live-card {
+    margin: 10px 28px;
+    border: 1px solid #fce7f3;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .live-card .lc-head {
+    background: #fdf2f8;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #fce7f3;
+  }
+  .lc-badge {
+    background: #ec4899;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .lc-diff {
+    font-size: 0.78rem;
+    color: #ec4899;
+    font-weight: 600;
+  }
+  .live-card .lc-body { padding: 14px 18px; font-size: 0.9rem; color: #374151; }
+  .live-card .lc-body ul { margin: 8px 0 8px 18px; }
+  .live-card .lc-body li { margin-bottom: 4px; }
+
+  .code-box {
+    background: #1e1e2e;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    overflow-x: auto;
+  }
+  .code-box pre {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    color: #cdd6f4;
+    white-space: pre;
+    line-height: 1.6;
+  }
+  .code-box .kw { color: #cba6f7; }
+  .code-box .fn { color: #89b4fa; }
+  .code-box .tp { color: #f9e2af; }
+  .code-box .cm { color: #585b70; font-style: italic; }
+  .code-box .str { color: #a6e3a1; }
+
+  .req-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 10px;
+  }
+  .req-box .req-title { font-size: 0.8rem; font-weight: 700; color: #ec4899; margin-bottom: 6px; }
+  .req-box ul { margin-left: 18px; }
+  .req-box li { font-size: 0.85rem; color: #475569; margin-bottom: 3px; }
+
+  /* Algo */
+  .algo-item {
+    display: flex; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f5f7;
+  }
+  .algo-item:last-child { border-bottom: none; }
+  .algo-num {
+    background: #fff3e0;
+    color: #e65100;
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .section-pad { padding: 0 28px 18px; }
+
+  /* Note */
+  .note {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 12px 28px;
+    font-size: 0.84rem;
+    color: #92400e;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>📋 Vue3 + TypeScript 面試題目</h1>
+    <div class="sub">經典必考題 + 情境題 + Live Coding</div>
+    <div class="tags">
+      <span class="tag">Vue 3</span>
+      <span class="tag">TypeScript</span>
+      <span class="tag">Element Plus</span>
+      <span class="tag">演算法</span>
+      <span class="tag">面試時間：1 小時</span>
+    </div>
+  </div>
+
+  <!-- Time allocation -->
+  <div class="time-bar">
+    <h3>⏱ 時間分配建議</h3>
+    <div class="time-row">
+      <div class="time-label">口頭詢問（基礎＋Vue3）</div>
+      <div class="time-track"><div class="time-fill" style="width:33%; background: linear-gradient(90deg,#3b82f6,#60a5fa)">口頭</div></div>
+      <div class="time-min">~20 min</div>
+    </div>
+    <div class="time-row">
+      <div class="time-label">情境題（設計思路）</div>
+      <div class="time-track"><div class="time-fill" style="width:17%; background: linear-gradient(90deg,#10b981,#34d399)">情境</div></div>
+      <div class="time-min">~10 min</div>
+    </div>
+    <div class="time-row">
+      <div class="time-label">Live Coding</div>
+      <div class="time-track"><div class="time-fill" style="width:42%; background: linear-gradient(90deg,#ec4899,#f472b6)">Live Coding（選二題）</div></div>
+      <div class="time-min">~25 min</div>
+    </div>
+    <div class="time-row">
+      <div class="time-label">演算法（說思路）</div>
+      <div class="time-track"><div class="time-fill" style="width:8%; background: linear-gradient(90deg,#f59e0b,#fbbf24)">演</div></div>
+      <div class="time-min">~5 min</div>
+    </div>
+  </div>
+
+  <!-- 一、JS/TS 基礎 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-js">⚡</div>
+      <div>
+        <h2>一、JavaScript / TypeScript 基礎</h2>
+        <div class="section-desc">暖身題，判斷基礎功力是否扎實</div>
+      </div>
+    </div>
+    <div class="q-list">
+      <div class="q-item">
+        <div class="q-num">1</div>
+        <div class="q-content"><strong>閉包 (Closure)</strong> 是什麼？請舉一個實際使用場景（計數器、防抖、模組封裝等）。<div class="hint">👀 看看他能不能說出「保留外層作用域變數」的本質</div></div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">2</div>
+        <div class="q-content"><strong>var / let / const</strong> 的差別？和作用域 (scope) 的關係？Hoisting 呢？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">3</div>
+        <div class="q-content"><strong>this</strong> 在不同情況下指向什麼？箭頭函式和一般函式的差別？<strong>call / apply / bind</strong> 分別什麼時候用？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">4</div>
+        <div class="q-content"><strong>Event Loop</strong> 是什麼？<strong>Macrotask vs Microtask</strong> 的執行順序，舉例說明（setTimeout vs Promise.then）。<div class="hint">👀 經典題，必須答出來</div></div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">5</div>
+        <div class="q-content"><strong>Promise.all / Promise.race / Promise.allSettled</strong> 差別？各適用什麼場景？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">6</div>
+        <div class="q-content"><strong>淺拷貝 vs 深拷貝</strong>：你平常怎麼處理？<code>structuredClone</code> vs 手寫 deepClone 怎麼選？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">7</div>
+        <div class="q-content"><strong>TypeScript</strong>：<code>interface</code> vs <code>type</code> 什麼時候用哪個？說說<strong>泛型 (Generics)</strong> 的用法。</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">8</div>
+        <div class="q-content"><strong>Map / Set / WeakMap / WeakSet</strong> 什麼時候會用到？和普通物件 / 陣列比，差別在哪？</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 二、Vue3 核心 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-vue">💚</div>
+      <div>
+        <h2>二、Vue3 核心</h2>
+        <div class="section-desc">必須答出來的重點，面試 Vue 都會問</div>
+      </div>
+    </div>
+    <div class="q-list">
+      <div class="q-item">
+        <div class="q-num">9</div>
+        <div class="q-content"><strong>Vue3 響應式原理</strong>：為什麼從 <code>Object.defineProperty</code> 換成 <code>Proxy</code>？優勢在哪？<div class="hint">👀 核心題，說出 Proxy 能監听新增屬性 / 陣列操作的優點</div></div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">10</div>
+        <div class="q-content"><strong>ref vs reactive</strong>：什麼時候用哪個？你會不會踩進 ref 解包 (unwrap) 的陷阱？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">11</div>
+        <div class="q-content"><strong>computed vs watch vs watchEffect</strong> 差別？什麼場景用什麼？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">12</div>
+        <div class="q-content"><strong>v-if vs v-show</strong> 和效能的關係？再說說 <strong>v-if 和 v-for 的優先級</strong>，你會怎麼處理？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">13</div>
+        <div class="q-content"><strong>key</strong> 的作用？為什麼不能用 <code>index</code> 當 key（什麼場景會出問題）？<div class="hint">👀 和 diff 算法直接相關</div></div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">14</div>
+        <div class="q-content"><strong>組件通信方式</strong>：列出所有方式（props/emit、provide-inject、Pinia、expose + template ref），說明各自適用場景。</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">15</div>
+        <div class="q-content"><strong>Vue3 生命周期</strong>：<code>setup</code> 裡怎麼對應 Options API 的各鉤子？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">16</div>
+        <div class="q-content"><strong>keep-alive</strong> 用途和場景？異步組件能不能搭配？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">17</div>
+        <div class="q-content"><strong>Teleport</strong>：什麼時候會用它？和 v-if 比好處在哪？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">18</div>
+        <div class="q-content"><strong>自定義指令</strong>：你寫過什麼？說說實現思路（權限控制、自動 focus、懶加載等）。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 三、Element Plus -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-ep">🟣</div>
+      <div>
+        <h2>三、Element Plus</h2>
+        <div class="section-desc">看看日常開發經驗</div>
+      </div>
+    </div>
+    <div class="q-list">
+      <div class="q-item">
+        <div class="q-num">19</div>
+        <div class="q-content"><strong>Form 驗證</strong>：怎麼處理複雜表單驗證（巢套組件、動態規則、跨字段驗證）？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">20</div>
+        <div class="q-content"><strong>Table 大量數據</strong>：幾千筆數據怎麼優化？考慮過虛擬滾動嗎？</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">21</div>
+        <div class="q-content"><strong>主題自定義</strong>：怎麼換主題覆蓋樣式？用過 CSS Variable 方式嗎？</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 四、情境題 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-scenario">🎭</div>
+      <div>
+        <h2>四、情境題</h2>
+        <div class="section-desc">重點看開發經驗和設計思路，答案不唯一</div>
+      </div>
+    </div>
+    <div class="note">💡 這幾道的重點不是標準答案，而是觀察考生怎麼思考、能不能說出清楚的設計思路。</div>
+
+    <div class="scenario-card">
+      <div class="sc-head"><span class="sc-badge">情境 A</span><strong>權限管理</strong></div>
+      <div class="sc-body">
+        <blockquote>產品要求不同角色看到不同的按鈕和頁面。從路由守衛到按鈕級別的控制，你會怎麼設計？</blockquote>
+        想看：路由守衛的使用 → 全局指令 / 組件包裝 → Pinia 儲存權限資訊的方式。
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="sc-head"><span class="sc-badge b">情境 B</span><strong>大量數據表格</strong></div>
+      <div class="sc-body">
+        <blockquote style="border-color:#3b82f6; background:#eff6ff; color:#1e40af">後端一次傳回幾千筆要放進 Table，頁面開始變卡。你會怎麼處理？</blockquote>
+        想看：分頁策略 → 虛擬滾動的概念 → 數據緩存和渲染優化。
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="sc-head"><span class="sc-badge c">情境 C</span><strong>多步驟表單</strong></div>
+      <div class="sc-body">
+        <blockquote style="border-color:#8b5cf6; background:#f5f3ff; color:#5b21b6">多步驟表單（wizard），使用者來來去去切換，已輸入數據不能丟失。怎麼設計？</blockquote>
+        想看：局部 vs 全局狀態考量 → Pinia store 設計 → form validation 時序處理。
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="sc-head"><span class="sc-badge d">情境 D</span><strong>API 錯誤處理</strong></div>
+      <div class="sc-body">
+        <blockquote style="border-color:#f59e0b; background:#fffbeb; color:#92400e">頁面裡有十幾個同時發送的 API，幾個可能會錯。怎麼設計統一錯誤處理和重試策略？</blockquote>
+        想看：axios interceptor 使用 → Promise.allSettled 策略 → 重試邏輯設計。
+      </div>
+    </div>
+  </div>
+
+  <!-- 五、Live Coding -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-live">💻</div>
+      <div>
+        <h2>五、Live Coding 題目</h2>
+        <div class="section-desc">選二道，約 25 min，根據面試節奏調整</div>
+      </div>
+    </div>
+    <div class="note">💡 建議先選一道「入門級」暖身，再選一道「進階級」看功力。</div>
+
+    <!-- A -->
+    <div class="live-card">
+      <div class="lc-head">
+        <span class="lc-badge">題目 A</span>
+        <strong>TODO List</strong>
+        <span class="lc-diff">⭐⭐ 入門</span>
+      </div>
+      <div class="lc-body">
+        <p>用 <strong>Vue3 Composition API + TypeScript</strong> 做一個 TODO 應用：</p>
+        <ul>
+          <li>新增、刪除、標記完成</li>
+          <li>切換「全部 / 未完成 / 已完成」篩選</li>
+          <li>用 <code>computed</code> 算出各狀態的數量</li>
+        </ul>
+        <div class="req-box">
+          <div class="req-title">📌 要求</div>
+          <ul>
+            <li>必須用 TypeScript 定義 Task 介面</li>
+            <li>用 reactive / ref 管理狀態</li>
+            <li>篩選功能用 computed 實現</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- B -->
+    <div class="live-card">
+      <div class="lc-head">
+        <span class="lc-badge">題目 B</span>
+        <strong>帶搜尋的數據表格</strong>
+        <span class="lc-diff">⭐⭐⭐ 進階</span>
+      </div>
+      <div class="lc-body">
+        <p>做一個帶搜尋和排序功能的 <strong>Element Plus Table</strong>：</p>
+        <ul>
+          <li>給定模擬數據（20-30 筆）</li>
+          <li>搜尋框可搜尋任意欄位</li>
+          <li>點擊表頭升序/降序排序</li>
+        </ul>
+        <div class="req-box">
+          <div class="req-title">📌 要求</div>
+          <ul>
+            <li>用 TypeScript 定義數據介面</li>
+            <li>搜尋和排序用 computed 計算派生數據</li>
+            <li>搜尋輸入需要 debounce（手寫或用插件均可）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- C -->
+    <div class="live-card">
+      <div class="lc-head">
+        <span class="lc-badge">題目 C</span>
+        <strong>手寫 Debounce + 搜尋建議</strong>
+        <span class="lc-diff">⭐⭐⭐ 進階</span>
+      </div>
+      <div class="lc-body">
+        <p>實現一個搜尋輸入框，帶自動補全建議：</p>
+        <ul>
+          <li>手寫一個 <code>useDebounce</code> composable</li>
+          <li>輸入停止後觸發搜尋（模擬 API，用 setTimeout 即可）</li>
+          <li>顯示搜尋結果下拉列表</li>
+        </ul>
+        <div class="req-box">
+          <div class="req-title">📌 要求</div>
+          <ul>
+            <li><code>useDebounce</code> 必須手寫，不能用套件</li>
+            <li>搜尋 logic 要用 composable 封裝</li>
+            <li>TypeScript 類型都要寫清楚</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- D -->
+    <div class="live-card">
+      <div class="lc-head">
+        <span class="lc-badge">題目 D</span>
+        <strong>手寫 Promise.all</strong>
+        <span class="lc-diff">⭐⭐⭐ 進階</span>
+      </div>
+      <div class="lc-body">
+        <p>不能用原生 <code>Promise.all</code>，請手實現：</p>
+        <ul>
+          <li>傳入一陣列 Promise，全部 resolve 後回傳結果陣列</li>
+          <li>任何一個 reject，整體就 reject</li>
+          <li>結果陣列順序必須和輸入順序一致</li>
+        </ul>
+        <div class="code-box"><pre><span class="kw">function</span> <span class="fn">myPromiseAll</span>&lt;<span class="tp">T</span>&gt;(promises: <span class="tp">Promise</span>&lt;<span class="tp">T</span>&gt;[]): <span class="tp">Promise</span>&lt;<span class="tp">T</span>[]&gt; {
+  <span class="cm">// 你的實現</span>
+}</pre></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 六、演算法 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-algo">🧮</div>
+      <div>
+        <h2>六、演算法與邏輯思考</h2>
+        <div class="section-desc">不需要 code，說出思路和時間複雜度即可（約 5 min）</div>
+      </div>
+    </div>
+    <div class="q-list">
+      <div class="algo-item">
+        <div class="algo-num">1</div>
+        <div class="q-content"><strong>兩數之和 (Two Sum)</strong>：給定陣列和目標值，找兩個數字索引使和為目標。你的時間複雜度是多少？<div class="hint">👀 看看他會不會說出 Hash Map 的 O(n) 做法</div></div>
+      </div>
+      <div class="algo-item">
+        <div class="algo-num">2</div>
+        <div class="q-content"><strong>有效括號匹配</strong>：含 <code>()[]{'}'}</code> 的字串，判斷括號是否有效。你會用什麼資料結構？<div class="hint">👀 經典 Stack 題</div></div>
+      </div>
+      <div class="algo-item">
+        <div class="algo-num">3</div>
+        <div class="q-content"><strong>陣列扁平化 (Flatten)</strong>：巢套陣列攤成一維，你知道幾種做法？</div>
+      </div>
+      <div class="algo-item">
+        <div class="algo-num">4</div>
+        <div class="q-content"><strong>陣列去重</strong>：幾種方式？說明適用場景和效能差別。<div class="hint">👀 看看他能不能說出 Set、indexOf、filter + includes 等方法的取捨</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
