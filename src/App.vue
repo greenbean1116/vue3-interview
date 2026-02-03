@@ -5,6 +5,13 @@
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/table">Table</RouterLink>
+        <RouterLink to="/one">One</RouterLink>
+        <RouterLink to="/two">Two</RouterLink>
+        <RouterLink to="/three">Three</RouterLink>
+        <RouterLink to="/four">Four</RouterLink>
+        <RouterLink to="/five">Five</RouterLink>
+        <RouterLink to="/six">Six</RouterLink>
+        <RouterLink to="/seven">Seven</RouterLink>
       </nav>
     </div>
   </header>

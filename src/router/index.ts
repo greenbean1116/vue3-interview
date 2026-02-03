@@ -22,6 +22,41 @@ const router = createRouter({
       name: 'table',
       component: () => import('../pages/TablePage.vue'),
     },
+    {
+      path: '/one',
+      name: 'One',
+      component: () => import('../test/one/One.vue'),
+    },
+    {
+      path: '/two',
+      name: 'Two',
+      component: () => import('../test/two/Two.vue'),
+    },
+    {
+      path: '/three',
+      name: 'Three',
+      component: () => import('../test/three/Three.vue'),
+    },
+    {
+      path: '/four',
+      name: 'Four',
+      component: () => import('../test/four/Four.vue'),
+    },
+    {
+      path: '/five',
+      name: 'Five',
+      component: () => import('../test/five/Five.vue'),
+    },
+    {
+      path: '/six',
+      name: 'Six',
+      component: () => import('../test/six/Six.vue'),
+    },
+    {
+      path: '/seven',
+      name: 'Seven',
+      component: () => import('../test/seven/Seven.vue'),
+    },
   ],
 })
 

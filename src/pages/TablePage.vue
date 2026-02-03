@@ -1,6 +1,6 @@
 <template lang="">
   <div>
-    <table>
+    <!-- <table>
       <tr>
         <td v-for="item in tableHeaderList">{{ item }}</td>
       </tr>
@@ -8,7 +8,7 @@
       <tr>
         <td v-for="user in usersRef">{{ item }}</td>
       </tr>
-    </table>
+    </table> -->
   </div>
 </template>
 <script setup lang="ts">
