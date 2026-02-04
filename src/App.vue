@@ -12,6 +12,13 @@
         <RouterLink to="/five">Five</RouterLink>
         <RouterLink to="/six">Six</RouterLink>
         <RouterLink to="/seven">Seven</RouterLink>
+        <RouterLink to="/eight">Eight</RouterLink>
+        <RouterLink to="/nine">Nine</RouterLink>
+        <RouterLink to="/ten">Ten</RouterLink>
+        <RouterLink to="/eleven">Eleven</RouterLink>
+        <RouterLink to="/twelve">Twelve</RouterLink>
+        <RouterLink to="/thirteen">Thirteen</RouterLink>
+        <RouterLink to="/tree">Tree</RouterLink>
       </nav>
     </div>
   </header>

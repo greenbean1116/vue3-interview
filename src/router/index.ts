@@ -57,6 +57,46 @@ const router = createRouter({
       name: 'Seven',
       component: () => import('../test/seven/Seven.vue'),
     },
+    {
+      path: '/eight',
+      name: 'Eight',
+      component: () => import('../test/eight/Eight.vue'),
+    },
+    {
+      path: '/nine',
+      name: 'Nine',
+      component: () => import('../test/nine/Nine.vue'),
+    },
+    {
+      path: '/ten',
+      name: 'Ten',
+      component: () => import('../test/ten/Ten.vue'),
+    },
+    {
+      path: '/eleven',
+      name: 'Eleven',
+      component: () => import('../test/eleven/Eleven.vue'),
+    },
+    {
+      path: '/eleven',
+      name: 'Eleven',
+      component: () => import('../test/eleven/Eleven.vue'),
+    },
+    {
+      path: '/twelve',
+      name: 'Twelve',
+      component: () => import('../test/twelve/Twelve.vue'),
+    },
+    {
+      path: '/thirteen',
+      name: 'Thirteen',
+      component: () => import('../test/thirteen/Thirteen.vue'),
+    },
+    {
+      path: '/tree',
+      name: 'Tree',
+      component: () => import('../test/tree/Tree.vue'),
+    },
   ],
 })
 
